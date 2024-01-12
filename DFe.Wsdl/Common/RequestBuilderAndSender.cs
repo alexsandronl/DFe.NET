@@ -44,14 +44,25 @@ namespace CTe.CTeOSDocumento.Common
         {
             SoapUtils soapUtils = new SoapUtils();
             XmlDocument xmlResult = new XmlDocument();
-
+        
             var xmlEnvelop = soapUtils.SerealizeDocument(soapEnvelope);
-
+        
             string tes = soapUtils.SendRequest(xmlEnvelop, configuration.CertificadoDigital, configuration.Url, configuration.TimeOut, requestType);
             xmlResult.LoadXml(tes);
-
-            return xmlResult.GetElementsByTagName(responseElementName)[0];
+        
+            // Busca o elemento desejado de forma case-insensitive
+            foreach (XmlNode node in xmlResult.DocumentElement.GetElementsByTagName("*"))
+            {
+                if (node.Name.Equals(responseElementName, StringComparison.OrdinalIgnoreCase))
+                {
+                    return node;
+                }
+            }
+        
+            // Retorne null se o elemento não for encontrado
+            return null;
         }
+
 
         /// <summary>
         /// Executa o carregamento, execução do soap e retorno do resultado
