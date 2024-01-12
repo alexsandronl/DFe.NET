@@ -40,7 +40,7 @@ namespace CTe.CTeOSDocumento.Common
         /// <param name="responseElementName"></param>
         /// <returns></returns>
         public static XmlNode Execute<TCommonSoapEnvelope>(TCommonSoapEnvelope soapEnvelope,
-            WsdlConfiguracao configuration, TipoEvento requestType, string responseElementName) where TCommonSoapEnvelope : CommonSoapEnvelope
+        WsdlConfiguracao configuration, TipoEvento requestType, string responseElementName) where TCommonSoapEnvelope : CommonSoapEnvelope
         {
             SoapUtils soapUtils = new SoapUtils();
             XmlDocument xmlResult = new XmlDocument();
@@ -48,9 +48,13 @@ namespace CTe.CTeOSDocumento.Common
             var xmlEnvelop = soapUtils.SerealizeDocument(soapEnvelope);
 
             string tes = soapUtils.SendRequest(xmlEnvelop, configuration.CertificadoDigital, configuration.Url, configuration.TimeOut, requestType);
+
+            tes = tes.Replace("retConsStatServCte", "retConsStatServCTe");
+
             xmlResult.LoadXml(tes);
 
             return xmlResult.GetElementsByTagName(responseElementName)[0];
+
         }
 
         /// <summary>
